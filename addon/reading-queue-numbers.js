@@ -1,8 +1,9 @@
 var ReadingQueueNumbers = {
-  notifierID: null, menuID: null, columnID: null, chain: Promise.resolve(), rootURI: null,
+  notifierID: null, menuID: null, columnID: null, toolsPopup: null, toolsPopupListener: null, chain: Promise.resolve(), rootURI: null,
   async startup({ id, rootURI }) {
     this.rootURI = rootURI;
     await this.addToWindow(Zotero.getMainWindow());
+    this.bindMenuLabelFallback(Zotero.getMainWindow());
     this.notifierID = Zotero.Notifier.registerObserver(this, ["item"], "reading-queue-numbers");
     try {
       this.menuID = Zotero.MenuManager.registerMenu({menuID:"global-number-tools",pluginID:id,target:"main/menubar/tools",menus:[{menuType:"submenu",l10nID:"global-number-menu",menus:[
@@ -19,7 +20,18 @@ var ReadingQueueNumbers = {
     const locale = Services.locale.appLocaleAsBCP47?.toLowerCase().startsWith("zh") ? "zh-CN" : "en-US";
     await window.MozXULElement.insertFTLIfNeeded(this.rootURI + `locale/${locale}/global-number.ftl`);
   },
-  shutdown() { if(this.notifierID) Zotero.Notifier.unregisterObserver(this.notifierID); if(this.menuID) Zotero.MenuManager.unregisterMenu(this.menuID); if(this.columnID) Zotero.ItemTreeManager.unregisterColumn(this.columnID); },
+  bindMenuLabelFallback(window) {
+    this.applyMenuLabels(window);
+    this.toolsPopup = window?.document.getElementById("menu_ToolsPopup");
+    this.toolsPopupListener = () => this.applyMenuLabels(window);
+    this.toolsPopup?.addEventListener("popupshowing", this.toolsPopupListener);
+  },
+  applyMenuLabels(window) {
+    const chinese = Services.locale.appLocaleAsBCP47?.toLowerCase().startsWith("zh");
+    const labels = chinese ? {"global-number-menu":"全局编号","global-number-menu-status":"查看全局编号状态","global-number-menu-assign":"为选中条目分配全局编号","global-number-menu-backfill":"为所有未编号条目补充编号"} : {"global-number-menu":"Global Number","global-number-menu-status":"Show global number status","global-number-menu-assign":"Assign global numbers to selected items","global-number-menu-backfill":"Assign numbers to all unnumbered items"};
+    for (const [id, label] of Object.entries(labels)) window?.document.querySelector(`[data-l10n-id="${id}"]`)?.setAttribute("label", label);
+  },
+  shutdown() { if(this.notifierID) Zotero.Notifier.unregisterObserver(this.notifierID); if(this.menuID) Zotero.MenuManager.unregisterMenu(this.menuID); if(this.columnID) Zotero.ItemTreeManager.unregisterColumn(this.columnID); this.toolsPopup?.removeEventListener("popupshowing",this.toolsPopupListener); },
   notify(event,type,ids) { if(event==="add"&&type==="item") this.chain=this.chain.then(()=>this.assignIDs(ids)).catch(e=>Zotero.logError(e)); },
   read(item) { const m=(item.getField("extra")||"").match(/\[global-number\]\s*([\s\S]*?)\s*\[\/global-number\]/); try{return m?JSON.parse(m[1]):null}catch(_){return null} },
   getNumber(item) { return this.read(item)?.number||null; },

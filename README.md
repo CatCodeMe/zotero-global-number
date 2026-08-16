@@ -39,8 +39,8 @@ does not need to be reinstalled manually for ordinary upgrades.
 The repository is the only source of truth.
 
 1. Make and test a change on a branch.
-2. Update `addon/manifest.json`'s semantic `version` (for example `0.1.2` to
-   `0.1.3`) as part of the change.
+2. Update `addon/manifest.json`'s semantic `version` (for example `0.1.3` to
+   `0.1.4`) as part of the change.
 3. Merge it into `main`.
 
 GitHub Actions then builds the XPI, calculates its SHA-256 update checksum,

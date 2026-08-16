@@ -7,6 +7,7 @@ async function startup({ id, version, rootURI }) {
 
 async function onMainWindowLoad({ window }) {
   await ReadingQueueNumbers?.addToWindow(window);
+  ReadingQueueNumbers?.bindMenuLabelFallback(window);
 }
 
 function shutdown() {
