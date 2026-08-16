@@ -2,10 +2,14 @@ var ReadingQueueNumbers = {
   notifierID: null, menuID: null, columnID: null, chain: Promise.resolve(),
   async startup({ id }) {
     this.notifierID = Zotero.Notifier.registerObserver(this, ["item"], "reading-queue-numbers");
-    this.menuID = Zotero.MenuManager.registerMenu({menuID:"global-number-tools",pluginID:id,target:"main/menubar/tools",menus:[{menuType:"submenu",l10nID:"global-number-menu",menus:[
-      {menuType:"menuitem",l10nID:"global-number-menu-status",onCommand:()=>this.showStatus()},
-      {menuType:"menuitem",l10nID:"global-number-menu-assign",onCommand:(_e,c)=>this.assignSelected(c.items||[])}]}]});
-    this.columnID = await Zotero.ItemTreeManager.registerColumn({dataKey:"globalNumber",label:"全局编号",pluginID:id,dataProvider:item=>this.getNumber(item)||""});
+    try {
+      this.menuID = Zotero.MenuManager.registerMenu({menuID:"global-number-tools",pluginID:id,target:"main/menubar/tools",menus:[{menuType:"submenu",l10nID:"global-number-menu",menus:[
+        {menuType:"menuitem",l10nID:"global-number-menu-status",onCommand:()=>this.showStatus()},
+        {menuType:"menuitem",l10nID:"global-number-menu-assign",onCommand:(_e,c)=>this.assignSelected(c.items||[])}]}]});
+    } catch (error) { Zotero.logError(error); }
+    try {
+      this.columnID = await Zotero.ItemTreeManager.registerColumn({dataKey:"globalNumber",label:"全局编号",pluginID:id,dataProvider:item=>this.getNumber(item)||""});
+    } catch (error) { Zotero.logError(error); }
   },
   shutdown() { if(this.notifierID) Zotero.Notifier.unregisterObserver(this.notifierID); if(this.menuID) Zotero.MenuManager.unregisterMenu(this.menuID); if(this.columnID) Zotero.ItemTreeManager.unregisterColumn(this.columnID); },
   notify(event,type,ids) { if(event==="add"&&type==="item") this.chain=this.chain.then(()=>this.assignIDs(ids)).catch(e=>Zotero.logError(e)); },
