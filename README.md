@@ -1,60 +1,33 @@
-# Global Number for Zotero
+# Zotero 全局编号
 
-Zotero 9 plugin that gives every new regular item a globally increasing,
-five-digit number (`00001`–`99999`). It does not alter titles, tags,
-collections, attachments, or existing Zotero fields.
+[English](README.en.md)
 
-The number is stored in the standard, syncable **Extra** field as a small
-namespaced JSON block:
+<img src="addon/icon.svg" width="80" alt="全局编号图标">
 
-```
+一个给 Zotero 9 使用的小插件：为“我的文库”中的常规条目分配全局递增的五位编号（`00001`–`99999`）。
+
+## 功能
+
+- 通过 Zotero Connector 或手动新建的条目会自动编号。
+- 条目列表可显示“全局编号”列。
+- `工具 → 全局编号`可以查看当前最大编号和下一个编号。
+- 可明确执行“为所有未编号条目补充编号”；不会修改标题、标签、分类或附件。
+- 换电脑后会从已同步条目中的最大编号继续。
+
+编号写入可同步的 **Extra（其他）** 字段，并使用独立命名空间，不占用 Zotero 原生书目信息字段：
+
+```text
 [global-number]
 {"version":1,"number":"00001"}
 [/global-number]
 ```
 
-## Behavior
+## 安装与更新
 
-- Chrome Connector and manual additions are handled by the same Zotero item-add
-  event.
-- All new regular items in My Library are numbered; collection placement stays
-  entirely under your control.
-- `Tools → 全局编号 → 查看全局编号状态` shows the maximum and next number.
-- `Tools → 全局编号 → 为所有未编号条目补充编号` is an explicit one-time
-  backfill: it affects only regular items in My Library, preserves existing
-  numbers, and never changes titles, tags, collections, or attachments.
-- On a new computer, the plugin scans the synced Extra blocks and
-  continues from the maximum.
-- The `全局编号` custom column displays the parsed number without exposing the
-  JSON storage block in the item list.
+从最新的 [GitHub Release](https://github.com/CatCodeMe/zotero-global-number/releases) 下载并安装 XPI。首次安装后，Zotero 可以通过插件管理器自动更新，也可以在“检查更新”中手动更新。
 
-## Install and update
+## 维护
 
-Install the `.xpi` from the latest [GitHub Release](https://github.com/CatCodeMe/zotero-global-number/releases).
-After installation Zotero checks the release update manifest itself. The plugin
-does not need to be reinstalled manually for ordinary upgrades.
+修改代码并更新 `addon/manifest.json` 的 `version`。合并到 `main` 后，GitHub Actions 会自动生成 XPI、SHA-256 更新清单和 GitHub Release。
 
-## Maintainer release flow
-
-The repository is the only source of truth.
-
-1. Make and test a change on a branch.
-2. Update `addon/manifest.json`'s semantic `version` (for example `0.1.3` to
-   `0.1.4`) as part of the change.
-3. Merge it into `main`.
-
-GitHub Actions then builds the XPI, calculates its SHA-256 update checksum,
-creates the matching `vX.Y.Z` GitHub Release, and publishes its `updates.json`.
-The checked-in `updates.json` is updated only as a compatibility bridge for
-early installations that still read the old raw-GitHub update URL. All released
-versions use GitHub Releases' stable `latest/download/updates.json` endpoint.
-
-Do not reuse an already released version: the workflow deliberately skips an
-existing tag, which makes releases traceable and prevents replacing an XPI that
-clients may already have verified.
-
-## AI tags
-
-AI tagging is deliberately not included in v0.1. It will require an explicit
-provider configuration, review-before-apply UI, and a small documented taxonomy.
-No API key or item text is sent anywhere in this release.
+v0.1 不包含 AI 标签功能；插件不会上传条目内容或 API Key。

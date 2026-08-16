@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title desc">
+  <title id="title">Global Number</title>
+  <desc id="desc">A five digit library number on a blue card</desc>
+  <rect width="128" height="128" rx="30" fill="#2563eb"/>
+  <rect x="18" y="26" width="92" height="76" rx="13" fill="#fff"/>
+  <path d="M33 45h62M33 57h32" stroke="#bfdbfe" stroke-width="6" stroke-linecap="round"/>
+  <text x="64" y="86" fill="#1d4ed8" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="24" font-weight="700" text-anchor="middle">00001</text>
+</svg>
