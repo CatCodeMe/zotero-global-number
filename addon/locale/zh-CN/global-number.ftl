@@ -3,6 +3,8 @@ global-number-menu =
 
 global-number-menu-status =
     .label = 查看全局编号状态
+global-number-menu-configure-width =
+    .label = 配置编号位数…
 
 global-number-menu-assign =
     .label = 为选中条目分配全局编号

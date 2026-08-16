@@ -3,6 +3,8 @@ global-number-menu =
 
 global-number-menu-status =
     .label = Show global number status
+global-number-menu-configure-width =
+    .label = Configure number width…
 
 global-number-menu-assign =
     .label = Assign global numbers to selected items
