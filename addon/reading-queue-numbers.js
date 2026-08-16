@@ -12,7 +12,7 @@ var ReadingQueueNumbers = {
         {menuType:"menuitem",l10nID:"global-number-menu-backfill",onCommand:()=>this.backfillExisting()}]}]});
     } catch (error) { Zotero.logError(error); }
     try {
-      this.columnID = await Zotero.ItemTreeManager.registerColumn({dataKey:"globalNumber",label:"全局编号",pluginID:id,dataProvider:item=>this.getNumber(item)||""});
+      this.columnID = await Zotero.ItemTreeManager.registerColumn({dataKey:"globalNumber",label:"全局编号",pluginID:id,width:"92px",minWidth:65,staticWidth:true,zoteroPersist:["width","hidden","sortDirection"],dataProvider:item=>this.getNumber(item)||""});
     } catch (error) { Zotero.logError(error); }
   },
   async addToWindow(window) {
