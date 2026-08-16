@@ -2,7 +2,7 @@ var ReadingQueueNumbers = {
   notifierID: null, menuID: null, columnID: null, chain: Promise.resolve(), rootURI: null,
   async startup({ id, rootURI }) {
     this.rootURI = rootURI;
-    this.addToWindow(Zotero.getMainWindow());
+    await this.addToWindow(Zotero.getMainWindow());
     this.notifierID = Zotero.Notifier.registerObserver(this, ["item"], "reading-queue-numbers");
     try {
       this.menuID = Zotero.MenuManager.registerMenu({menuID:"global-number-tools",pluginID:id,target:"main/menubar/tools",menus:[{menuType:"submenu",l10nID:"global-number-menu",menus:[
@@ -14,10 +14,10 @@ var ReadingQueueNumbers = {
       this.columnID = await Zotero.ItemTreeManager.registerColumn({dataKey:"globalNumber",label:"全局编号",pluginID:id,dataProvider:item=>this.getNumber(item)||""});
     } catch (error) { Zotero.logError(error); }
   },
-  addToWindow(window) {
+  async addToWindow(window) {
     if (!window || !this.rootURI || !window.MozXULElement) return;
     const locale = Services.locale.appLocaleAsBCP47?.toLowerCase().startsWith("zh") ? "zh-CN" : "en-US";
-    window.MozXULElement.insertFTLIfNeeded(this.rootURI + `locale/${locale}/global-number.ftl`);
+    await window.MozXULElement.insertFTLIfNeeded(this.rootURI + `locale/${locale}/global-number.ftl`);
   },
   shutdown() { if(this.notifierID) Zotero.Notifier.unregisterObserver(this.notifierID); if(this.menuID) Zotero.MenuManager.unregisterMenu(this.menuID); if(this.columnID) Zotero.ItemTreeManager.unregisterColumn(this.columnID); },
   notify(event,type,ids) { if(event==="add"&&type==="item") this.chain=this.chain.then(()=>this.assignIDs(ids)).catch(e=>Zotero.logError(e)); },
