@@ -5,7 +5,7 @@
         {
           "version": "0.1.0",
           "update_link": "https://raw.githubusercontent.com/CatCodeMe/zotero-global-number/main/dist/reading-queue-numbers.xpi",
-          "update_hash": "sha256:c3fb3767c0650cbdee0db5e49a63c119cdbe2b830c6047d3c2fe03e9197ad5b1",
+          "update_hash": "sha256:d38a2e91a1f0932cff750cc3ff3bb13dfc7e4b444838ff22f03f1b14052c0554",
           "applications": {
             "zotero": {
               "strict_min_version": "9.0",

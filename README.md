@@ -27,10 +27,10 @@ namespaced JSON block:
 
 ## Current status
 
-This is an early local build. The XPI manifest now includes Zotero 9's required
-`applications.zotero.update_url`; the initial installer failure was caused by
-that missing field. The package is structurally validated, but the first
-release is not published yet.
+This is an early public alpha. The XPI manifest includes Zotero 9's required
+`applications.zotero.update_url`, and `updates.json` publishes a matching
+SHA-256 checksum for the package. The installer and live UI still require
+Zotero 9 verification before this should be treated as a stable release.
 
 ## AI tags
 
