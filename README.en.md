@@ -4,17 +4,29 @@
 
 <img src="addon/icon.svg" width="80" alt="Global Number icon">
 
-A small Zotero 9 plugin that assigns a unique, increasing five-digit number
-(`00001`–`99999`) to regular items in My Library.
+A small Zotero 9 plugin that assigns a unique, increasing global number to
+regular items in My Library. It defaults to five digits (`00001`) and supports
+1–12 configurable digits.
+
+![Global Number column concept](docs/images/global-number-column.png)
 
 ## Features
 
 - Numbers new items from the Zotero Connector or manual entry.
-- Shows the number in a `Global Number` column.
-- Shows the current maximum and next number under `Tools → Global Number`.
+- Shows the number in a resizable, sortable `Global Number` column.
+- Shows the current maximum and next number, and configures number width, under
+  `Tools → Global Number`.
 - Can explicitly backfill existing unnumbered regular items without changing
   titles, tags, collections, or attachments.
 - Continues from the largest synced number on another computer.
+
+### Number width
+
+Use `Tools → Global Number → Configure number width…` to choose 1–12 digits.
+The value cannot be reduced below the digits required by the **next** number.
+For example, once the maximum is `999`, the next number is `1000`, so the width
+must be at least four digits. Existing stored numbers are never rewritten;
+only newly assigned numbers use the new display width.
 
 Numbers are stored in the syncable **Extra** field as a namespaced block, so
 they do not occupy Zotero's built-in bibliographic fields:

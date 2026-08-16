@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
   "name": "Global Number",
-  "version": "0.1.5",
-  "description": "Assigns durable five-digit global numbers to Zotero items.",
+  "version": "0.1.6",
+  "description": "Assigns durable, configurable-width global numbers to Zotero items.",
   "author": "CatCodeMe",
   "homepage_url": "https://github.com/CatCodeMe/zotero-global-number",
   "icons": {
