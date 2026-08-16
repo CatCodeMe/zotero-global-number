@@ -3,9 +3,9 @@
     "reading-queue-numbers@catcodeme.github.io": {
       "updates": [
         {
-          "version": "0.1.5", 
-          "update_link": "https://github.com/CatCodeMe/zotero-global-number/releases/download/v0.1.5/global-number-0.1.5.xpi", 
-          "update_hash": "sha256:07c43670f271ff2d68da628a2cae10d08bb7966262998a3052cb92846ac2622f", 
+          "version": "0.1.6", 
+          "update_link": "https://github.com/CatCodeMe/zotero-global-number/releases/download/v0.1.6/global-number-0.1.6.xpi", 
+          "update_hash": "sha256:7c1711101d029f53ae9a2c96440d1c1500c0156b548e3d99e6477f4a3256c52e", 
           "applications": {
             "zotero": {
               "strict_min_version": "9.0",
