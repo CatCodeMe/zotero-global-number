@@ -1,6 +1,7 @@
 #!/bin/sh
 set -eu
 root=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
-mkdir -p "$root/dist"
-rm -f "$root/dist/reading-queue-numbers.xpi"
-(cd "$root/addon" && zip -qr "$root/dist/reading-queue-numbers.xpi" .)
+output=${1:-"$root/dist/reading-queue-numbers.xpi"}
+mkdir -p "$(dirname -- "$output")"
+rm -f "$output"
+(cd "$root/addon" && zip -X -qr "$output" .)

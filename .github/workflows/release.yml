@@ -1,0 +1,74 @@
+name: Release Zotero plugin
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "addon/**"
+      - "scripts/**"
+      - ".github/workflows/release.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: zotero-plugin-release-main
+  cancel-in-progress: false
+
+jobs:
+  release:
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Read release version
+        id: version
+        run: |
+          version="$(jq -r '.version' addon/manifest.json)"
+          test -n "$version" && test "$version" != "null"
+          echo "value=$version" >> "$GITHUB_OUTPUT"
+          echo "tag=v$version" >> "$GITHUB_OUTPUT"
+      - name: Check whether this version is already released
+        id: exists
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view "${{ steps.version.outputs.tag }}" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo "value=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "value=false" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Build release files
+        if: steps.exists.outputs.value == 'false'
+        run: |
+          chmod +x scripts/package.sh scripts/render-updates.sh
+          mkdir -p release
+          scripts/package.sh "release/global-number-${{ steps.version.outputs.value }}.xpi"
+          scripts/render-updates.sh \
+            "${{ steps.version.outputs.value }}" \
+            "https://github.com/${GITHUB_REPOSITORY}/releases/download/${{ steps.version.outputs.tag }}/global-number-${{ steps.version.outputs.value }}.xpi" \
+            "release/global-number-${{ steps.version.outputs.value }}.xpi" \
+            release/updates.json
+      - name: Create GitHub Release
+        if: steps.exists.outputs.value == 'false'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${{ steps.version.outputs.tag }}" \
+            --repo "$GITHUB_REPOSITORY" \
+            --title "Global Number ${{ steps.version.outputs.value }}" \
+            --generate-notes \
+            "release/global-number-${{ steps.version.outputs.value }}.xpi" \
+            release/updates.json
+      - name: Publish compatibility update manifest on main
+        if: steps.exists.outputs.value == 'false'
+        run: |
+          cp release/updates.json updates.json
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add updates.json
+          git commit -m "chore: publish update manifest for ${{ steps.version.outputs.tag }} [skip ci]"
+          git push

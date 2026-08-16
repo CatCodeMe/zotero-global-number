@@ -5,6 +5,10 @@ async function startup({ id, version, rootURI }) {
   await ReadingQueueNumbers.startup({ id, version, rootURI });
 }
 
+async function onMainWindowLoad({ window }) {
+  ReadingQueueNumbers?.addToWindow(window);
+}
+
 function shutdown() {
   ReadingQueueNumbers?.shutdown();
   ReadingQueueNumbers = undefined;
